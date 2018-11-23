@@ -1,3 +1,4 @@
+/*
 const router = new (require('restify-router')).Router();
 
 router.get('/', function (req, res, next) {
@@ -9,3 +10,4 @@ router.get('/', function (req, res, next) {
 });
 
 module.exports = router;
+*/

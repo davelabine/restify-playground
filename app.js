@@ -9,8 +9,7 @@ const server = restify.createServer({
 	version: CONFIG.app_version,
 });
 
-const home = require('./routes/index');
-const students = require('./routes/students');
+const v1 = require('./routes/V1');
 
 server.use(restify.plugins.throttle({
 	burst: 100,  	// Max 10 concurrent requests (if tokens)
@@ -22,8 +21,7 @@ server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
 
-router.add('/api', home);
-router.add('/api/students', students);
+router.add('/v1', v1);
 router.applyRoutes(server);
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
