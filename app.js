@@ -8,6 +8,7 @@ const server = restify.createServer({
 const logger = require('./basic-logger');
 
 const home = require('./routes/index');
+const students = require('./routes/students');
 
 server.use(restify.plugins.throttle({
 	burst: 100,  	// Max 10 concurrent requests (if tokens)
@@ -20,6 +21,7 @@ server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
 
 router.add('/api', home);
+router.add('/api/students', students);
 router.applyRoutes(server);
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
