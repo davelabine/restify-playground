@@ -16,10 +16,13 @@ server.use(restify.plugins.throttle({
 	rate: 2,  		// Steady state: 2 request / 1 seconds
 	ip: true,		// throttle per IP
 }));
-server.use(restify.plugins.bodyParser());
+// http://restify.com/docs/plugins-api/
+server.use(restify.plugins.bodyParser()); 							
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
+// TODO: probably need to add CORS support
+// https://github.com/restify/node-restify/issues/1151
 
 // ROUTES
 const v1 = require('./routes/V1');
@@ -29,7 +32,8 @@ router.applyRoutes(server);
 // DATABASE
 const models = require("./models");
 models.sequelize.authenticate().then(() => {
-    console.log('Connected to SQL database:', CONFIG.db_name);
+	console.log('Connected to SQL database:', CONFIG.db_name);
+	models.sequelize.sync();
 })
 .catch(err => {
     console.error('Unable to connect to SQL database:',CONFIG.db_name, err);

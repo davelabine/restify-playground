@@ -1,8 +1,9 @@
+const logger = require('../basic-logger');
 
 const getAll = async function(req, res, next){
 	res.json({
 		message: 'Welcome to API getAll!',
-		query: req.query
+        query: req.query
     });
     next();
 }
