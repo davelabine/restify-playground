@@ -32,11 +32,10 @@ router.applyRoutes(server);
 // DATABASE
 const models = require("./models");
 models.sequelize.authenticate().then(() => {
-	console.log('Connected to SQL database:', CONFIG.db_name);
-	models.sequelize.sync();
+	console.log('Connected to SQL database.');
 })
 .catch(err => {
-    console.error('Unable to connect to SQL database:',CONFIG.db_name, err);
+    console.error('Unable to connect to SQL database.', err);
 });
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
