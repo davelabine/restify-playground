@@ -1,14 +1,9 @@
 const logger = require('../basic-logger');
-const Student = require('./../models').Student;
 
 const getAll = async function(req, res, next){
-    let student = await Student.findOne();
-    logger.info(student);
-
 	res.json({
 		message: 'Welcome to API getAll!',
-        query: req.query,
-        result: student
+        query: req.query
     });
     next();
 }
