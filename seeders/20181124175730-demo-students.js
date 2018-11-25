@@ -9,11 +9,28 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Students', [{
-      studentId: '123',
+    return queryInterface.bulkInsert('Students', [
+    {
+      studentId: '111111',
       firstName: 'John',
       lastName: 'Doe'
-    }], {});
+    },
+    {
+      studentId: '222222',
+      firstName: 'Homer',
+      lastName: 'Simpson'
+    },    
+    {
+      studentId: '333333',
+      firstName: 'Bart',
+      lastName: 'Simpson'
+    },
+    {
+      studentId: '444444',
+      firstName: 'Marge',
+      lastName: 'Bouvier'
+    },    
+  ], {});
   },
 
   down: (queryInterface, Sequelize) => {
