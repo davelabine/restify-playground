@@ -5,9 +5,8 @@ const { to, TE }  = require('../services/util');
 
 const create = async function (req, res, next) {
     let err, student;
-	let student_info = req.body;
 	
-	[err, student] = await to(Student.create(student_info));
+	[err, student] = await to(Student.create(req.body));
       if(err) return next(new errors.UnprocessableEntityError(err.message));
 
 	res.statusCode = 201; // created
@@ -21,8 +20,15 @@ const create = async function (req, res, next) {
 module.exports.create = create;
 
 const get = async function(req, res, next){
-    let student = await Student.findOne();
-    logger.info(student);
+	let err, student;
+	let id = req.query.id;
+
+	[err, student] = await to(Student.findAll({
+		where: {
+		  id: id
+		}
+	}));
+	  if(err) return next(new errors.ServiceUnavailableError(err.message));
 
 	res.json({
 		message: 'Welcome to student get!',
