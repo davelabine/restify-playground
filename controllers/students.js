@@ -1,13 +1,22 @@
 const logger = require('../basic-logger');
-const Student = require('./../models').Student;       
+const Student = require('../models').Student;
+const errors = require('restify-errors');     
+const { to, TE }  = require('../services/util');  
 
 const create = async function (req, res, next) {
+    let err, student;
+	let student_info = req.body;
+	
+	[err, student] = await to(Student.create(student_info));
+      if(err) return next(new errors.UnprocessableEntityError(err.message));
+
+	res.statusCode = 201; // created
 	res.json({
-		message: 'Welcome to student create!',
-		query: req.query,
-		body: req.body
-	});
-	next();
+		message: 'Student created!',
+        result: student
+    });
+
+	return next();
 };
 module.exports.create = create;
 
