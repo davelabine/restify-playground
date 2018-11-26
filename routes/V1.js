@@ -7,9 +7,10 @@ router.get('/', IndexController.getAll);
 router.post('/', IndexController.post);          
 router.get('/a/:name', IndexController.get); 
 
-router.post('/student', StudentsController.create); // C
-router.get('/student', StudentsController.get);     // R        
-router.put('/student', StudentsController.update);  // U
-router.del('/student', StudentsController.remove);  // D            
+router.post('/student', StudentsController.create);     // C
+router.get('/student', StudentsController.getAll);         // R
+router.get('/student/:id', StudentsController.get);     // R             
+router.put('/student/:id', StudentsController.update);  // U
+router.del('/student/:id', StudentsController.remove);  // D            
 
 module.exports = router;

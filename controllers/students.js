@@ -19,20 +19,29 @@ const create = async function (req, res, next) {
 };
 module.exports.create = create;
 
+const getAll = async function(req, res, next){
+	let err, student;
+
+	[err, student] = await to(Student.findAll());
+	  if(err) return next(new errors.NotFoundError(err.message));
+
+	res.json({
+		message: 'Welcome to student getAll!',
+        result: student
+    });
+    next();
+}
+module.exports.getAll = getAll;
+
 const get = async function(req, res, next){
 	let err, student;
-	let id = req.query.id;
 
-	[err, student] = await to(Student.findAll({
-		where: {
-		  id: id
-		}
-	}));
-	  if(err) return next(new errors.ServiceUnavailableError(err.message));
+	[err, student] = await to(Student.findById(req.params.id));
+	  if(err) return next(new errors.NotFoundError(err.message));
 
 	res.json({
 		message: 'Welcome to student get!',
-        query: req.query,
+        params: req.params.id,
         result: student
     });
     next();
