@@ -12,6 +12,21 @@ module.exports.to = async (promise) => {
     return [null, res];
 };
 
+module.exports.ReS = function(req, res, data, code){ // Success Web Response
+    let send_data = {
+		request_query: req.query,
+		request_body: req.body
+	};
+
+    if(typeof data == 'object'){
+        send_data = Object.assign(data, send_data);//merge the objects
+    }
+
+    if(typeof code !== 'undefined') res.statusCode = code;
+
+    return res.json(send_data);
+};
+
 module.exports.TE = TE = function(err_message, log){ // TE stands for Throw Error
     if(log === true){
         logger.error(err_message);
