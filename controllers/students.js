@@ -23,7 +23,8 @@ const getAll = async function(req, res, next){
 	let err, student;
 
 	[err, student] = await to(Student.findAll());
-	  if(err) return next(new errors.NotFoundError(err.message));
+	  if(err) return next(new errors.UnprocessableEntityError(err.message));
+	  if(!student) return next(new errors.NotFoundError());
 
 	res.json({
 		message: 'Welcome to student getAll!',
@@ -33,11 +34,19 @@ const getAll = async function(req, res, next){
 }
 module.exports.getAll = getAll;
 
-const get = async function(req, res, next){
-	let err, student;
+const getStudent = async function(req, res, next) {
+	var err, student;
 
 	[err, student] = await to(Student.findById(req.params.id));
-	  if(err) return next(new errors.NotFoundError(err.message));
+	  if(err) return next(new errors.UnprocessableEntityError(err.message));
+	  if(!student) return next(new errors.NotFoundError());
+
+	return student;
+}
+
+const get = async function(req, res, next){
+	let student = await getStudent(req,res,next);
+	  if(!student) return;
 
 	res.json({
 		message: 'Welcome to student get!',
@@ -49,25 +58,31 @@ const get = async function(req, res, next){
 module.exports.get = get;
 
 const update = async function (req, res, next) {
+	let student = await getStudent(req,res,next);
+	  if(!student) return;
+
+	let err;
+	student.set(req.body);
+  
+	[err, student] = await to(student.save());
+	  if(err) return next(new errors.UnprocessableEntityError(err.message));
+
 	res.json({
 		message: 'Welcome to student put!',
 		query: req.query,
-		body: req.body
+		body: req.body,
+		student: student
 	});
 	next();
 };
 module.exports.update = update;
 
 const remove = async function (req, res, next) {
-	/*
-    let user, err;
-    user = req.user;
-
-    [err, user] = await to(user.destroy());
-    if(err) return ReE(res, 'error occured trying to delete user');
-
-	return ReS(res, {message:'Deleted User'}, 204);
-	*/
+	let student = await getStudent(req,res,next);
+	  if(!student) return;
+	
+	student.destroy();
+	  
 	res.json({
 		message: 'Welcome to student delete!',
         query: req.query
