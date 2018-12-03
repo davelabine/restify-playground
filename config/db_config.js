@@ -33,7 +33,7 @@ DB_USER=root
 DB_PASSWORD=password
 
 
-  CONFIG.db_dialect   = process.env.DB_DIALECT    || 'mysql';
+CONFIG.db_dialect   = process.env.DB_DIALECT    || 'mysql';
 CONFIG.db_host      = process.env.DB_HOST       || 'localhost';
 CONFIG.db_port      = process.env.DB_PORT       || '3306';
 CONFIG.db_name      = process.env.DB_NAME       || 'dbNameChange';
