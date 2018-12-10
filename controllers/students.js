@@ -1,7 +1,7 @@
 const logger = require('../basic-logger');
 const Student = require('../models').Student;
 const errors = require('restify-errors');     
-const { to, TE, ReS }  = require('../services/util');  
+const { to, TE, ReS }  = require('../util/util');  
 
 const create = async function (req, res, next) {
     let err, student;
