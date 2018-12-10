@@ -4,7 +4,12 @@ module.exports = {
     return queryInterface.createTable('SQS_Jobs', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
+        type: Sequelize.INTEGER
+      },      
+      messageId: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       processed: {

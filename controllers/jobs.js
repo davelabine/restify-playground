@@ -6,9 +6,9 @@ const { to, TE, ReS }  = require('../services/util');
 const create = async function (req, res, next) {
     let err, job;
     
-    let id = "fun-" + Math.random();
+    let messageId = "fun-" + Math.random();
     job = {
-        id: id
+        messageId : messageId
     }
     
     logger.info(job);
