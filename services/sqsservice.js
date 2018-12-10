@@ -27,11 +27,11 @@ module.exports.queueJob =
           if(err) return logger.error("unable to queue job ${id}", err, err.stack);
         logger.info("Successfully queued message - ", message);  
 
-        job.messageId = message.messageId;
+        job.messageId = message.MessageId;
         [err, job] = await to(job.save());
           if(err) return logger.error("unable update job in db", err, err.stack);
-        logger.info("Successfully created job - ", job);  
+        logger.info("Successfully created job - ", job.id);  
 
-        return message;
+        return job;
     };
 
