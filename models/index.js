@@ -6,6 +6,7 @@ const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/db_config.js')[env];
+const logger = require('../basic-logger');
 const db = {};
 
 let sequelize;
@@ -23,6 +24,7 @@ fs
   .forEach(file => {
     const model = sequelize['import'](path.join(__dirname, file));
     db[model.name] = model;
+    logger.info("Processing model - " + model.name);
   });
 
 Object.keys(db).forEach(modelName => {

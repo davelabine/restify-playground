@@ -2,15 +2,22 @@ const router = new (require('restify-router')).Router();
 
 const IndexController 	 = require('../controllers');
 const StudentsController = require('../controllers/students');
+const JobsController     = require('../controllers/jobs');
 
 router.get('/', IndexController.getAll); 
 router.post('/', IndexController.post);          
 router.get('/a/:name', IndexController.get); 
 
 router.post('/student', StudentsController.create);     // C
-router.get('/student', StudentsController.getAll);         // R
+router.get('/student', StudentsController.getAll);      // R
 router.get('/student/:id', StudentsController.get);     // R             
 router.put('/student/:id', StudentsController.update);  // U
-router.del('/student/:id', StudentsController.remove);  // D            
+router.del('/student/:id', StudentsController.remove);  // D       
+
+router.post('/job', JobsController.create);             // C
+router.get('/job', JobsController.getAll);              // R
+router.get('/job/:id', JobsController.get);             // R             
+router.put('/job/:id', JobsController.update);          // U
+router.del('/job/:id', JobsController.remove);          // D      
 
 module.exports = router;
