@@ -32,6 +32,6 @@ sqs.sendMessage(params, function(err, data) {
   if (err) {
     console.log("Error", err);
   } else {
-    console.log("Success", data.MessageId);
+    console.log("SendMessage Success - ", data);
   }
 });
