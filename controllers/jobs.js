@@ -1,13 +1,13 @@
 const logger = require('../basic-logger');
 const Job = require('../models').SQS_Job;
-const sqsService = require('../services/sqsservice');
+const jobService = require('../services/jobservice');
 const errors = require('restify-errors');     
 const { to, TE, ReS }  = require('../util/util');  
 
 const create = async function (req, res, next) {
     let err, job;
 
-    [err, job] = await to(sqsService.queueJob());
+    [err, job] = await to(jobService.queueJob());
       if(err) return next(new errors.UnprocessableEntityError(err.message));
 
     ReS(req, res, {message:'Created new job', job: job}, 201);
