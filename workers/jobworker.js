@@ -1,26 +1,18 @@
-const {receiveQueuedMessage} = require('../util/sqsconsumer');
+const JobConsumer = require('./jobconsumer');
+const AWS = require('aws-sdk');
 
-module.exports.jobWorker = (sqs, queueUrl) => {
-    var sqs = sqs;
-    var queueUrl = queueUrl;
+// Set the region 
+AWS.config.update({region: 'us-west-2'});
+// Create an SQS service object
+const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+const queueUrl = "https://sqs.us-west-2.amazonaws.com/962985931788/Resterapp_q";
 
-    jobConsumer: async () => {
-        while (true) {
-            try {
-                let message = await receiveQueuedMessage(sqs,queueUrl);
-                console.log("Received message! - ", message);
-            } catch (err) {
-                console.log("jobConsumer error!", err);
-            }
-        }
+module.exports.startJobWorker = () => {
+    console.log("startWorker!");
+    try {
+        const jobConsumer = JobConsumer(sqs, queueUrl);
+        jobConsumer.receiveMessages();
+    } catch (err) {
+        console.log("startWorker error!" - err);
     }
-
-    startWorker: () => {
-        try {
-            jobConsumer();
-        } catch (err) {
-            console.log("startWorker error!" - err);
-        }
-    }
-
-}
+};
