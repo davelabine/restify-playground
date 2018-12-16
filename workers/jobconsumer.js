@@ -1,21 +1,21 @@
+const JobProcessor = require('./jobprocessor');
 const SqsConsumer = require('../util/sqsconsumer');
-const sleep = require('../util/sleep').sleep;
+const sleep = require('../util/sleep');
 
 module.exports = (sqs, queueUrl) => {
-    const sqsConsumer = SqsConsumer(sqs, queueUrl);
+    const jobProcessor = JobProcessor();
+    const sqsConsumer = SqsConsumer(sqs, queueUrl, jobProcessor);
 
     const receiveMessages = async () => {
         while (true) {
             try {
-                let message = sqsConsumer.consumeSqsMessages();
+                sqsConsumer.consumeSqsMessages();
             } catch (err) {
                 console.log("jobConsumer error!", err);
             }
 
             // For now, slow down processing for easier debugging.
-            console.log("sleeping...");
-            await sleep(1000);
-            console.log("waking up!");
+            await sleep.sleepPromise(1000);
         }
     };
 

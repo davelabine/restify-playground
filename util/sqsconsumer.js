@@ -8,8 +8,7 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
     const processMessage = async (message) => {
         let toDelete = false;
         try {
-            //await messageProcessor(message);
-            console.log("Message processed!" - message);
+            await messageProcessor.processMessage(message);
             toDelete = true;
         } catch (err) {
             console.log("processMessage error!" - err);
@@ -35,8 +34,8 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
                 WaitTimeSeconds: 0
             };
             const data = await sqs.receiveMessage(params).promise();
-            console.log("receiveMessage - ", data);
             if (data && data.Messages && data.Messages.length > 0) {
+                console.log("received message!");
                 return data.Messages;
             }
             return [];
@@ -46,13 +45,14 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
         }
     };
 
-    const deleteMessage = async (receiptHandle, messageId) => {
+    const deleteMessage = async (receiptHandle) => {
         const deleteParams = {
             QueueUrl: queueUrl,
             ReceiptHandle: receiptHandle,
         };
         try {
             const data = await sqs.deleteMessage(deleteParams).promise();
+            console.log("Deleted message.");
         } catch (err) {
             console.log("deleteSqsMessages error! - ", err);
         }
