@@ -7,6 +7,7 @@
 module.exports.queueStandardMessage =
     async (sqs, id, messageBody, queueUrl) => {
         const params = {
+            DelaySeconds: 0,
             MessageAttributes: {
                 id: {
                     DataType: 'String',

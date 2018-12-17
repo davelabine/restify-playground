@@ -9,7 +9,7 @@ var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 var queueURL = "https://sqs.us-west-2.amazonaws.com/962985931788/Resterapp_q";
 
 var params = {
- DelaySeconds: 10,
+ DelaySeconds: 0,
  MessageAttributes: {
   "Title": {
     DataType: "String",
