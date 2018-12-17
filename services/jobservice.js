@@ -21,7 +21,7 @@ module.exports.queueJob =
 
         // send to sqs
         const messageBody = JSON.stringify({
-            name: "blah"
+            napTime: 5000 // take a nap, in ms
         });
         [err, message] = await to(queueStandardMessage(sqs, JSON.stringify(job.id), messageBody, jobQueueUrl));
           if(err) return logger.error("unable to queue job ${id}", err, err.stack);
