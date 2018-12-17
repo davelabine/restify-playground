@@ -1,4 +1,4 @@
-
+logger = require('./basic-logger');
 /**
  * for now expecting calling function to manage error handling
  * and additional logging
@@ -11,14 +11,14 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
             await messageProcessor.processMessage(message);
             toDelete = true;
         } catch (err) {
-            console.log("processMessage error!" - err);
+            logger.error("processMessage error!" - err);
         } finally {
             if (toDelete) {
                 await deleteMessage(message.ReceiptHandle, message.MessageId);
             }
         }
     };
-
+    
     const receiveMessages = async () => {
         try {
             const params = {
@@ -30,18 +30,17 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
                   "All"
                 ],
                 QueueUrl: queueUrl,
-                VisibilityTimeout: 20,
+                VisibilityTimeout: process.env.SQS_VISIBILITY_TIMEOUT,
                 WaitTimeSeconds: 0
             };
             const data = await sqs.receiveMessage(params).promise();
             if (data && data.Messages && data.Messages.length > 0) {
-                console.log("received message!");
                 return data.Messages;
             }
             return [];
         }
         catch (err) {
-            console.log("consumeSqsMessages error! - ", err);
+            logger.error("consumeSqsMessages error! - ", err);
         }
     };
 
@@ -52,9 +51,9 @@ module.exports = (sqs, queueUrl, messageProcessor) => {
         };
         try {
             const data = await sqs.deleteMessage(deleteParams).promise();
-            console.log("Deleted message.");
+            logger.info("Deleted message.");
         } catch (err) {
-            console.log("deleteSqsMessages error! - ", err);
+            logger.error("deleteSqsMessages error! - ", err);
         }
     };
 

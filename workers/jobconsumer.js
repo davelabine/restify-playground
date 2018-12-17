@@ -1,4 +1,5 @@
 const JobProcessor = require('./jobprocessor');
+const logger = require('../util/basic-logger');
 const SqsConsumer = require('../util/sqsconsumer');
 
 module.exports = (sqs, queueUrl) => {
@@ -10,7 +11,7 @@ module.exports = (sqs, queueUrl) => {
             try {
                 await sqsConsumer.consumeSqsMessages();
             } catch (err) {
-                console.log("jobConsumer error!", err);
+               logger.error("jobConsumer error!", err);
             }
         }
     };

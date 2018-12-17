@@ -1,4 +1,5 @@
 const jobClient = require('../util/jobclient');
+const logger = require('../util/basic-logger');
 const sleep = require('../util/sleep');
 
 module.exports = () => {
@@ -6,18 +7,18 @@ module.exports = () => {
         const id = message.MessageAttributes.id.StringValue;
         const sqsMessageId = message.MessageId;
         const messageBody = JSON.parse(message.Body);
-        console.log("processing message id = %s!  body = %s, sqsMessageId = %s, ", id, message.Body, sqsMessageId);
+        logger.info("processing message id = %s!  body = %s, sqsMessageId = %s, ", id, message.Body, sqsMessageId);
 
         try {
             if (messageBody.napTime) {
-                console.log("Taking a nap for %s ms... ", messageBody.napTime);
+                logger.info("Taking a nap for %s ms... ", messageBody.napTime);
                 await sleep.sleepPromise(messageBody.napTime);
-                console.log("Ahhhh... that's better!");
+                logger.info("Ahhhh... that's better!");
             }
             await jobClient.putJobProcessed(id);
-            console.log("Processing complete.");
+            logger.info("Processing complete.");
         } catch (err) {
-            console.log("jobclient error!". err);
+            logger.error("jobclient error!". err);
         }
 
     }

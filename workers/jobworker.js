@@ -1,18 +1,19 @@
 const JobConsumer = require('./jobconsumer');
+const logger = require('../util/basic-logger');
 const AWS = require('aws-sdk');
 
 // Set the region 
-AWS.config.update({region: 'us-west-2'});
+AWS.config.update({region: process.env.AWS_REGION});
 // Create an SQS service object
 const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
-const queueUrl = "https://sqs.us-west-2.amazonaws.com/962985931788/Resterapp_q";
+const queueUrl = process.env.SQS_QUEUE_URL;
 
 module.exports.startJobWorker = () => {
-    console.log("startWorker!");
+    logger.info("startWorker!");
     try {
         const jobConsumer = JobConsumer(sqs, queueUrl);
         jobConsumer.receiveMessages();
     } catch (err) {
-        console.log("startWorker error!" - err);
+        logger.error("startWorker error!", err);
     }
 };

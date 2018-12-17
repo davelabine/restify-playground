@@ -1,8 +1,10 @@
 const logger = require('../util/basic-logger');
 const Job = require('../models').SQS_Job;
-const jobService = require('../services/jobservice');
+const JobService = require('../services/jobservice');
 const errors = require('restify-errors');     
 const { to, TE, ReS }  = require('../util/util');  
+
+const jobService = JobService();
 
 const create = async function (req, res, next) {
     let err, job;

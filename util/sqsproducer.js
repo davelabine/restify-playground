@@ -4,8 +4,9 @@
  * for now expecting calling function to manage error handling
  * and additional logging
  */
-module.exports.queueStandardMessage =
-    async (sqs, id, messageBody, queueUrl) => {
+module.exports = (sqs, sqsQueueUrl) => {
+
+    const queueStandardMessage = async (id, messageBody) => {
         const params = {
             DelaySeconds: 0,
             MessageAttributes: {
@@ -15,7 +16,12 @@ module.exports.queueStandardMessage =
                 },
             },
             MessageBody: messageBody,
-            QueueUrl: queueUrl,
+            QueueUrl: sqsQueueUrl,
         };
         return await sqs.sendMessage(params).promise();
     };
+
+    return {
+        queueStandardMessage,
+    };
+};

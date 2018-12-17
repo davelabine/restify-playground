@@ -1,15 +1,16 @@
-const CONFIG = require('./config/config');
+require('dotenv').config(); // Instantiate environment variables.
 
 // LOGGER
 const logger = require('./util/basic-logger');
-logger.info(CONFIG);
+// A little too verbose...
+// logger.info(process.env);  
 
 // RESTIFY
 const restify = require('restify');
 const router = new (require('restify-router')).Router();
 const server = restify.createServer({
-	name: CONFIG.app_name,
-	version: CONFIG.app_version,
+	name: process.env.APP_NAME,
+	version: process.env.APP_VERSION,
 });
 server.use(restify.plugins.throttle({
 	burst: 100,  	// Max 10 concurrent requests (if tokens)
@@ -32,17 +33,17 @@ router.applyRoutes(server);
 // DATABASE
 const models = require("./models");
 models.sequelize.authenticate().then(() => {
-	console.log('Connected to SQL database.');
+	logger.info('Connected to SQL database.');
 })
 .catch(err => {
-    console.error('Unable to connect to SQL database.', err);
+    logger.error('Unable to connect to SQL database.', err);
 });
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
 	logger.trace(`${metrics.method} ${metrics.path} ${metrics.statusCode} ${metrics.latency} ms`);
 }));
 
-server.listen(CONFIG.app_port, CONFIG.app_host, function () {
+server.listen(process.env.APP_PORT, process.env.APP_HOST, function () {
 	logger.info('%s listening at %s', server.name, server.url);
 });
 
