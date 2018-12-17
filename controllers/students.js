@@ -29,7 +29,7 @@ module.exports.getAll = getAll;
 const getStudent = async function(req, res, next) {
 	var err, student;
 
-	[err, student] = await to(Student.findById(req.params.id));
+	[err, student] = await to(Student.findByPk(req.params.id));
 	  if(err) return next(new errors.UnprocessableEntityError(err.message));
 	  if(!student) return next(new errors.NotFoundError());
 

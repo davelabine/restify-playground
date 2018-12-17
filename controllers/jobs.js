@@ -30,7 +30,7 @@ module.exports.getAll = getAll;
 const getJob = async function(req, res, next) {
 	var err, job;
 
-	[err, job] = await to(Job.findById(req.params.id));
+	[err, job] = await to(Job.findByPk(req.params.id));
 	  if(err) return next(new errors.UnprocessableEntityError(err.message));
 	  if(!job) return next(new errors.NotFoundError());
 
