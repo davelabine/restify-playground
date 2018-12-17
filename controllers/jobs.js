@@ -1,4 +1,4 @@
-const logger = require('../basic-logger');
+const logger = require('../util/basic-logger');
 const Job = require('../models').SQS_Job;
 const jobService = require('../services/jobservice');
 const errors = require('restify-errors');     

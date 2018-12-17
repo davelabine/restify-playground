@@ -1,9 +1,8 @@
-const CONFIG = require('./config/config');
 const bunyan = require('bunyan');
 const fs = require('fs');
 
 // For dev logging to stdout
-module.exports = bunyan.createLogger({name: CONFIG.app_name});
+module.exports = bunyan.createLogger({name: process.env.APP_NAME});
 
 /* For prod logging to files
 

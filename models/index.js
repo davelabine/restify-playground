@@ -6,7 +6,7 @@ const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/db_config.js')[env];
-const logger = require('../basic-logger');
+const logger = require('../util/basic-logger');
 const db = {};
 
 let sequelize;

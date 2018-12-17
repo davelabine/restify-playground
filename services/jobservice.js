@@ -1,4 +1,4 @@
-const logger = require('../basic-logger');
+const logger = require('../util/basic-logger');
 const { to }  = require('../util/util');  
 const Job = require('../models').SQS_Job;
 const AWS = require('aws-sdk');

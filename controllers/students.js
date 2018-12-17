@@ -1,4 +1,4 @@
-const logger = require('../basic-logger');
+const logger = require('../util/basic-logger');
 const Student = require('../models').Student;
 const errors = require('restify-errors');     
 const { to, TE, ReS }  = require('../util/util');  

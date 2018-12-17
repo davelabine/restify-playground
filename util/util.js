@@ -1,6 +1,6 @@
 const {to} = require('await-to-js');
 const pe = require('parse-error');
-const logger = require('../basic-logger');
+const logger = require('./basic-logger');
 
 // Why?
 // https://medium.com/front-end-hacking/error-handling-in-node-javascript-suck-unless-you-know-this-2018-aa0a14cfdd9d

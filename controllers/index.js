@@ -1,4 +1,4 @@
-const logger = require('../basic-logger');
+const logger = require('../util/basic-logger');
 
 const getAll = async function(req, res, next){
 	res.json({
