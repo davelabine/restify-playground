@@ -5,8 +5,7 @@
   "description": "",
   "main": "server.js",
 	"scripts": {
-		"start": "node server.js | ./node_modules/.bin/bunyan",
-		"start:dev": "nodemon server.js | ./node_modules/.bin/bunyan"
+		"start": "nodemon server.js | ./node_modules/.bin/bunyan"
 	},
   "author": "",
   "license": "ISC",

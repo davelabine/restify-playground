@@ -9,8 +9,7 @@
 		"boilerplate"
 	],
 	"scripts": {
-		"start": "node app.js | ./node_modules/.bin/bunyan",
-		"start:dev": "nodemon app.js | ./node_modules/.bin/bunyan"
+		"start": "nodemon app.js | ./node_modules/.bin/bunyan"
 	},
 	"devDependencies": {
 		"eslint": "^4.16.0",
