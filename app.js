@@ -5,9 +5,13 @@ const logger = require('./util/basic-logger');
 // A little too verbose...
 // logger.info(process.env);  
 
+const passport = require('passport-restify');
+
 // RESTIFY
 const restify = require('restify');
 const router = new (require('restify-router')).Router();
+var CookieParser = require('restify-cookies');
+var session = require('cookie-session');
 const server = restify.createServer({
 	name: process.env.APP_NAME,
 	version: process.env.APP_VERSION,
@@ -22,6 +26,15 @@ server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
+//server.use(restify.requestLogger());
+server.use(CookieParser.parse);
+server.use(session({
+	keys: ['key1', 'key2'],
+	maxage: 48 * 3600 /*hours*/ * 1000,  /*in milliseconds*/
+	secureProxy: false // if you do SSL outside of node
+}));
+server.use(passport.initialize());
+server.use(passport.session());
 // TODO: probably need to add CORS support
 // https://github.com/restify/node-restify/issues/1151
 
