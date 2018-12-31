@@ -46,15 +46,19 @@ server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
 //server.use(restify.requestLogger());
 server.use(CookieParser.parse);
-server.use(session({
-	keys: ['key1', 'key2'],
-	maxage: 48 * 3600 /*hours*/ * 1000,  /*in milliseconds*/
-	secureProxy: false // if you do SSL outside of node
-}));
 server.use(passport.initialize());
 server.use(passport.session());
 // TODO: probably need to add CORS support
 // https://github.com/restify/node-restify/issues/1151
+
+// STATIC DIRECTORY
+server.get(
+	'/',
+	restify.plugins.serveStatic({
+	  directory: './static',
+	  default: 'index.html'
+	})
+  );
 
 // ROUTES
 const v1 = require('./routes/V1');

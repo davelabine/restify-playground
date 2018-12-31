@@ -3,6 +3,7 @@ const router = new (require('restify-router')).Router();
 const IndexController 	 = require('../controllers');
 const StudentsController = require('../controllers/students');
 const JobsController     = require('../controllers/jobs');
+const AuthController     = require('../controllers/auth');
 
 router.get('/', IndexController.getAll); 
 router.post('/', IndexController.post);          
@@ -19,5 +20,8 @@ router.get('/job', JobsController.getAll);              // R
 router.get('/job/:id', JobsController.get);             // R             
 router.put('/job/:id', JobsController.update);          // U
 router.del('/job/:id', JobsController.remove);          // D      
+
+router.get('/login', AuthController.login);
+router.get('/auth/google', AuthController.login);
 
 module.exports = router;
