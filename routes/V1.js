@@ -23,5 +23,6 @@ router.del('/job/:id', JobsController.remove);          // D
 
 router.get('/login', AuthController.login);
 router.get('/auth/google', AuthController.authGoogle);
+router.get('/auth/google/callback', AuthController.authGoogleCallback);
 
 module.exports = router;

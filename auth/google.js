@@ -4,6 +4,8 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models').User;
 const init = require('./init');
 
+const googleClientID = process.env.GOOGLE_CLIENT_ID;
+
 // Use the GoogleStrategy within Passport.
 //   Strategies in Passport require a `verify` function, which accept
 //   credentials (in this case, an accessToken, refreshToken, and Google
@@ -11,7 +13,7 @@ const init = require('./init');
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/auth/google/callback"
+    callbackURL: "http://localhost:8080/api/v1/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
        logger.info("GoogleStrategy callback! - ", profile);
