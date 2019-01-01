@@ -5,31 +5,12 @@ const logger = require('./util/basic-logger');
 // A little too verbose...
 // logger.info(process.env);  
 
-const passport = require('passport-restify');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-const User = require('./models').User;
-
-// Use the GoogleStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Google
-//   profile), and invoke a callback with a user object.
-passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:8080/auth/google/callback"
-  },
-  function(accessToken, refreshToken, profile, done) {
-       User.findOrCreate({ googleId: profile.id }, function (err, user) {
-         return done(err, user);
-       });
-  }
-));
-
 // RESTIFY
 const restify = require('restify');
 const router = new (require('restify-router')).Router();
-var CookieParser = require('restify-cookies');
-var session = require('cookie-session');
+const passport = require('passport-restify');
+const CookieParser = require('restify-cookies');
+const session = require('cookie-session');
 const server = restify.createServer({
 	name: process.env.APP_NAME,
 	version: process.env.APP_VERSION,

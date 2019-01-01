@@ -22,6 +22,6 @@ router.put('/job/:id', JobsController.update);          // U
 router.del('/job/:id', JobsController.remove);          // D      
 
 router.get('/login', AuthController.login);
-router.get('/auth/google', AuthController.login);
+router.get('/auth/google', AuthController.authGoogle);
 
 module.exports = router;

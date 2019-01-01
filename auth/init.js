@@ -1,6 +1,6 @@
 const logger = require('../util/basic-logger');
 const passport = require('passport-restify');
-const User = require('./models').User;
+const User = require('../models').User;
 
 
 module.exports = function() {
