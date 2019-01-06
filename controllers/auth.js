@@ -10,7 +10,7 @@ const loginFailed = async function(req, res, next){
 module.exports.loginFailed = loginFailed;
 
 const login = async function(req, res, next){
-    logger.info("login controller - ", req.user);
+    logger.info("login controller - user id: ", req.user.id);
     // Successful authentication
     res.json(req.user);
     next();

@@ -6,18 +6,15 @@ const User = require('../models').User;
 module.exports = function() {
 
   passport.serializeUser(function(user, done) {
-    logger.info("serializeUser - ", user);
-    done(null, user);
+    logger.info("serializeUser - id: ", user.id);
+    done(null, user.id);
   });
 
   passport.deserializeUser(function(id, done) {
     logger.info("DEserializeUser - id: ", id);  
-    done(null, {user: '555555'});
-    /*
     User.findById(id, function (err, user) {
       done(err, user);
     });
-    */
   });
 
 };

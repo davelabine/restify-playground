@@ -27,8 +27,8 @@ passport.use(new GoogleStrategy({
         User
           .findOrCreate({ where: { googleId: profile.id }, defaults: { name: profile.displayName } })
           .spread((user, created) => {
-              logger.info("user: ", user.id);
-              logger.info("created: ", created);
+              logger.info("User findOrCreate -  id: %s, name: %s, googleId: %s, created: %s ", 
+                user.id, user.name, user.googleId, created);
               done(null, user);
           });
     } catch (error) {
