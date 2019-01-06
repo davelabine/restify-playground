@@ -19,5 +19,4 @@ module.exports.login = login;
 
 module.exports.authGoogle = passportGoogle.authenticate('google',{scope: 'https://www.googleapis.com/auth/plus.login'});
 
-module.exports.authGoogleCallback = passportGoogle.authenticate('google', { successRedirect: '/api/v1/auth/google/login',
-                                                                            failureRedirect: '/api/v1/auth/google/loginFailed' });
+module.exports.authGoogleCallback = passportGoogle.authenticate('google', { failureRedirect: '/api/v1/auth/google/loginFailed' });

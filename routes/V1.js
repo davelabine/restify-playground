@@ -24,6 +24,5 @@ router.del('/job/:id', JobsController.remove);          // D
 router.get('/auth/google', AuthController.authGoogle);
 router.get('/auth/google/callback', AuthController.authGoogleCallback, AuthController.login);
 router.get('/auth/google/loginFailed', AuthController.loginFailed);
-router.get('/auth/google/login', AuthController.login);
 
 module.exports = router;

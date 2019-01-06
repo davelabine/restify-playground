@@ -4,6 +4,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models').User;
 const init = require('./init');
 
+// newlines sneaking into these values, so trim()
 const clientID = process.env.GOOGLE_CLIENT_ID.trim();
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET.trim();
 
