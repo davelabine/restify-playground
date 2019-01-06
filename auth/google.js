@@ -20,15 +20,13 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:8080/api/v1/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    logger.info("GoogleStrategy callback! - ", profile.id);
+    logger.info("GoogleStrategy callback! - %s, %s", profile.id, profile.displayName);
     
-    let err, user;
     try {
         User
           .findOrCreate({ where: { googleId: profile.id }, defaults: { name: profile.displayName } })
           .spread((user, created) => {
-              logger.info("User findOrCreate -  id: %s, name: %s, googleId: %s, created: %s ", 
-                user.id, user.name, user.googleId, created);
+              logger.info("User findOrCreate - created: %s, user: ", created, user.get({plain: true}));
               done(null, user);
           });
     } catch (error) {
