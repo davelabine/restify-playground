@@ -25,7 +25,7 @@ server.use(restify.plugins.bodyParser());
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
-//server.use(restify.requestLogger());
+server.use(restify.plugins.requestLogger());
 server.use(CookieParser.parse);
 server.use(passport.initialize());
 server.use(passport.session());
@@ -45,6 +45,13 @@ server.get(
 const v1 = require('./routes/V1');
 router.add('/api/v1', v1);
 router.applyRoutes(server);
+
+/*
+server.on('after', restify.plugins.auditLogger({
+	log: logger,
+	event: 'after'
+  }));
+*/
 
 // DATABASE
 const models = require("./models");
