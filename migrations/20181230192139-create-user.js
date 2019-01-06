@@ -11,8 +11,9 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      someId: {
-        type: Sequelize.STRING
+      googleId: {
+        type: Sequelize.STRING,
+        unique: true
       },
       createdAt: {
         allowNull: false,

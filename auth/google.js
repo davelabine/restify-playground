@@ -2,6 +2,7 @@ const logger = require('../util/basic-logger');
 const passport = require('passport-restify');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const User = require('../models').User;
+const { to } = require('../util/util');  
 const init = require('./init');
 
 // newlines sneaking into these values, so trim()
@@ -19,13 +20,21 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:8080/api/v1/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-       logger.info("GoogleStrategy callback! - ", profile.id);
-       return done(null, { user: '12345'});
-       /*
-       User.findOrCreate({ googleId: profile.id }, function (err, user) {
-         return done(err, user);
-       });
-       */
+    logger.info("GoogleStrategy callback! - ", profile.id);
+    
+    let err, user;
+    try {
+        User
+          .findOrCreate({ where: { googleId: profile.id }, defaults: { name: profile.displayName } })
+          .spread((user, created) => {
+              logger.info("user: ", user.id);
+              logger.info("created: ", created);
+              done(null, user);
+          });
+    } catch (error) {
+        logger.error(error);
+        done(error);
+    }
   }
 ));
 
