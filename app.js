@@ -9,8 +9,7 @@ const logger = require('./util/basic-logger');
 const restify = require('restify');
 const router = new (require('restify-router')).Router();
 const passport = require('passport-restify');
-const CookieParser = require('restify-cookies');
-const session = require('cookie-session');
+var sessions = require("client-sessions");
 const server = restify.createServer({
 	name: process.env.APP_NAME,
 	version: process.env.APP_VERSION,
@@ -20,13 +19,19 @@ server.use(restify.plugins.throttle({
 	rate: 2,  		// Steady state: 2 request / 1 seconds
 	ip: true,		// throttle per IP
 }));
+// Handy link - https://stackoverflow.com/questions/32250185/client-sessions-module-with-passportjs/53574377#53574377
+server.use(sessions({
+	cookieName: 'session', // Passport expects this cookie name to be added to the request object.
+	secret: 'blargadeeblargblarg', // should be a large unguessable string
+	duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
+	activeDuration: 1000 * 60 * 5 // if expiresIn < activeDuration, the session will be extended by activeDuration milliseconds
+  }));
 // http://restify.com/docs/plugins-api/
 server.use(restify.plugins.bodyParser()); 							
 server.use(restify.plugins.acceptParser(server.acceptable));
 server.use(restify.plugins.queryParser());
 server.use(restify.plugins.gzipResponse());
 server.use(restify.plugins.requestLogger());
-server.use(CookieParser.parse);
 server.use(passport.initialize());
 server.use(passport.session());
 // TODO: probably need to add CORS support
@@ -46,7 +51,7 @@ const v1 = require('./routes/V1');
 router.add('/api/v1', v1);
 router.applyRoutes(server);
 
-/*
+/* Useful for debugging.
 server.on('after', restify.plugins.auditLogger({
 	log: logger,
 	event: 'after'

@@ -17,6 +17,15 @@ const login = async function(req, res, next){
 }
 module.exports.login = login;
 
-module.exports.authGoogle = passportGoogle.authenticate('google',{scope: 'https://www.googleapis.com/auth/plus.login'});
+const protected = async function(req, res, next){
+    logger.info("protected controller - user id: ", req.user.id);
+    // Successful authentication
+    res.json({meaningofLife: 42});
+    res.send("fun!");
+    next();
+}
+module.exports.protected = protected;
 
-module.exports.authGoogleCallback = passportGoogle.authenticate('google', { failureRedirect: '/api/v1/auth/google/loginFailed' });
+module.exports.authGoogleStart = passportGoogle.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' });
+
+module.exports.authGoogle = passportGoogle.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login', failureRedirect: '/api/v1/auth/google/loginFailed' });
