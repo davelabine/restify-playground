@@ -18,14 +18,17 @@ const login = async function(req, res, next){
 module.exports.login = login;
 
 const protected = async function(req, res, next){
+    if (!req.user) {
+        res.json({success: false});
+        return next();
+    }
     logger.info("protected controller - user id: ", req.user.id);
     // Successful authentication
-    res.json({meaningofLife: 42});
-    res.send("fun!");
+    res.json({secretEndpoint: true, meaningofLife: 42});
     next();
 }
 module.exports.protected = protected;
 
-module.exports.authGoogleStart = passportGoogle.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' });
+module.exports.authGoogleStart = passportGoogle.authenticate('google', { successReturnToOrRedirect: '/', scope: 'https://www.googleapis.com/auth/plus.login' });
 
-module.exports.authGoogle = passportGoogle.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login', failureRedirect: '/api/v1/auth/google/loginFailed' });
+module.exports.authGoogle = passportGoogle.authenticate('google', { failureRedirect: '/api/v1/auth/google/loginFailed' });
