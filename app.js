@@ -19,6 +19,14 @@ server.use(restify.plugins.throttle({
 	rate: 2,  		// Steady state: 2 request / 1 seconds
 	ip: true,		// throttle per IP
 }));
+
+const corsMiddleware = require('restify-cors-middleware')
+const cors = corsMiddleware({
+  origins: ['*']
+})
+server.pre(cors.preflight)
+server.use(cors.actual)
+
 // Handy link - https://stackoverflow.com/questions/32250185/client-sessions-module-with-passportjs/53574377#53574377
 server.use(sessions({
 	cookieName: 'session', // Passport expects this cookie name to be added to the request object.

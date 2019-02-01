@@ -9,6 +9,7 @@ const create = async function (req, res, next) {
 	[err, student] = await to(Student.create(req.body));
       if(err) return next(new errors.UnprocessableEntityError(err.message));
 	
+	res.header("id", student.id);	
 	ReS(req, res, {message:'Created new student', student: student}, 201);
 	return next();
 };
@@ -20,7 +21,7 @@ const getAll = async function(req, res, next){
 	[err, students] = await to(Student.findAll());
 	  if(err) return next(new errors.UnprocessableEntityError(err.message));
 	  if(!students) return next(new errors.NotFoundError());
-
+  res.Header
 	ReS(req, res, {message:'Get all students', students: students});
     next();
 }
