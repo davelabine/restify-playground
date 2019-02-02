@@ -1,3 +1,4 @@
+const fs = require('fs');
 const logger = require('../util/basic-logger');
 const Student = require('../models').Student;
 const errors = require('restify-errors');     
@@ -6,6 +7,14 @@ const { to, TE, ReS }  = require('../util/util');
 const create = async function (req, res, next) {
   let err, student;
 	
+	for (var key in req.files) {
+		console.log('key: ', JSON.stringify(key));
+    if (req.files.hasOwnProperty(key)) {
+      fs.renameSync(req.files[key].path, `${__dirname}/uploads/${req.files[key].name}`);
+      //fs.unlink(req.files[key].path);
+    }
+  }
+
 	[err, student] = await to(Student.create(req.body));
       if(err) return next(new errors.UnprocessableEntityError(err.message));
 	
