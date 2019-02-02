@@ -6,7 +6,8 @@ module.exports = (sequelize, DataTypes) => {
   const Student = sequelize.define('Student', {
     studentId: DataTypes.STRING,
     firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING
+    lastName: DataTypes.STRING,
+    photoUrl: DataTypes.STRING
   }, { 
     // don't add the timestamp attributes (updatedAt, createdAt)
     timestamps: false 

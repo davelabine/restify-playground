@@ -67,7 +67,8 @@ function buildRandomStudentsArray() {
     let student = {
       studentId: id,
       firstName: first,
-      lastName: last
+      lastName: last,
+      photoUrl: ''
     };
     console.log(student);
     students.push(student);

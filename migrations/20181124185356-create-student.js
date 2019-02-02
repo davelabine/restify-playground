@@ -29,6 +29,10 @@ module.exports = {
       lastName: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      photoUrl: {
+        type: Sequelize.STRING,
+        allowNull: true
       }
     });
   },
