@@ -1,20 +1,23 @@
-const fs = require('fs');
+const path = require('path');
 const logger = require('../util/basic-logger');
 const Student = require('../models').Student;
+const BlobClient = require('../util/blobclient');
+const blobClient = BlobClient();
 const errors = require('restify-errors');     
 const { to, TE, ReS }  = require('../util/util');  
 
 const create = async function (req, res, next) {
-  let err, student;
+	let err, student;
 	
-	for (var key in req.files) {
-		console.log('key: ', JSON.stringify(key));
-    if (req.files.hasOwnProperty(key)) {
-      fs.renameSync(req.files[key].path, `${__dirname}/uploads/${req.files[key].name}`);
-      //fs.unlink(req.files[key].path);
-    }
+	let photoUrl = '';
+	const fileKey = Object.keys(req.files)[0];
+	if (fileKey) {
+		const file = req.files[fileKey];
+		[err, photoUrl] = await to(blobClient.putFile(file.path, path.extname(file.name)));
+		  if (err) { logger.err('student photo multipart handling error: ', err.message); }
   }
 
+	req.body.photoUrl = photoUrl;
 	[err, student] = await to(Student.create(req.body));
       if(err) return next(new errors.UnprocessableEntityError(err.message));
 	
@@ -27,12 +30,15 @@ module.exports.create = create;
 const getAll = async function(req, res, next){
 	let err, students;
 
-	[err, students] = await to(Student.findAll());
-	  if(err) return next(new errors.UnprocessableEntityError(err.message));
-	  if(!students) return next(new errors.NotFoundError());
-  res.Header
+	[err, students] = await to(
+		Student.findAll(
+			{ order: [ ['lastName', 'ASC'], ['firstName', 'ASC'] ] }
+		));
+	    if(err) return next(new errors.UnprocessableEntityError(err.message));
+	    if(!students) return next(new errors.NotFoundError());
+  
 	ReS(req, res, {message:'Get all students', students: students});
-    next();
+  next();
 }
 module.exports.getAll = getAll;
 

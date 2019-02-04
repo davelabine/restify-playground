@@ -23,6 +23,7 @@
 		"client-sessions": "^0.8.0",
 		"dotenv": "^4.0.0",
 		"mysql2": "^1.6.4",
+		"node-uuid": "^1.4.8",
 		"parse-error": "^0.2.0",
 		"passport-google-oauth": "^1.0.0",
 		"passport-restify": "^1.0.1",
