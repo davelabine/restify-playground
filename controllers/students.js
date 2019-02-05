@@ -1,25 +1,30 @@
+const fs = require('fs');
 const path = require('path');
 const logger = require('../util/basic-logger');
 const Student = require('../models').Student;
-const BlobClient = require('../util/blobclient');
-const blobClient = BlobClient();
+const StudentService = require('../services/studentservice');
+const studentService = StudentService();
 const errors = require('restify-errors');     
 const { to, TE, ReS }  = require('../util/util');  
 
 const create = async function (req, res, next) {
-	let err, student;
-	
-	let photoUrl = '';
+	let filePath = '', fileExt ='';
 	const fileKey = Object.keys(req.files)[0];
 	if (fileKey) {
-		const file = req.files[fileKey];
-		[err, photoUrl] = await to(blobClient.putFile(file.path, path.extname(file.name)));
-		  if (err) { logger.err('student photo multipart handling error: ', err.message); }
-  }
+		filePath = req.files[fileKey].path;
+		fileExt = path.extname(req.files[fileKey].name);
+	}
 
-	req.body.photoUrl = photoUrl;
-	[err, student] = await to(Student.create(req.body));
-      if(err) return next(new errors.UnprocessableEntityError(err.message));
+	let err, student;
+	[err, student] = await to(studentService.createStudent(req.body, filePath, fileExt));
+		if (err) return next(new errors.UnprocessableEntityError(err.message));
+
+	// Make sure to delete the temp uploaded file
+	if (fileKey) {
+	  fs.unlink(req.files[fileKey].path, (err) => {
+			if (err) { logger.error("failed to delete local image: " + err); }
+		});
+	}
 	
 	res.header("id", student.id);	
 	ReS(req, res, {message:'Created new student', student: student}, 201);

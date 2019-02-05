@@ -16,16 +16,13 @@ module.exports = () => {
         if (!filePath) {
             throw new Error("blobclient putFile - empty file path.");
         }
-        logger.info('path: %s, ext: %s', filePath, ext);
         const keyName = uuid.v4() + ext;
-        logger.info('keyname: ', keyName);
 
         var fileStream = fs.createReadStream(filePath);
         fileStream.on('error', function(err) {
           logger.error('blobclient file Error', err);
         });
         
-        logger.info('put into S3');
         let resp;
         [err, resp] = await to(s3.upload({
             Bucket: bucketName,
