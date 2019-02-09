@@ -9,10 +9,13 @@
 		"boilerplate"
 	],
 	"scripts": {
-		"start": "nodemon app.js | ./node_modules/.bin/bunyan"
+		"start": "nodemon app.js | ./node_modules/.bin/bunyan",
+		"test": "jest",
+		"coverage": "jest --collectCoverageFrom=src/**.js --coverage src"
 	},
 	"devDependencies": {
 		"eslint": "^4.16.0",
+		"jest-cli": "^24.1.0",
 		"nodemon": "^1.18.6"
 	},
 	"dependencies": {
