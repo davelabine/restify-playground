@@ -11,7 +11,7 @@
 	"scripts": {
 		"start": "nodemon app.js | ./node_modules/.bin/bunyan",
 		"test": "jest",
-		"coverage": "jest --collectCoverageFrom=src/**.js --coverage src"
+		"coverage": "jest --coverage"
 	},
 	"devDependencies": {
 		"eslint": "^4.16.0",
