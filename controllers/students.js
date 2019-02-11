@@ -5,7 +5,7 @@ const Student = require('../models').Student;
 const StudentService = require('../services/studentservice');
 const studentService = StudentService();
 const errors = require('restify-errors');     
-const { to, TE, ReS }  = require('../util/util');  
+const { to, RE, ReS }  = require('../util/util');  
 
 const create = async function (req, res, next) {
 	let filePath = '', fileExt ='';
@@ -17,7 +17,7 @@ const create = async function (req, res, next) {
 
 	let err, student;
 	[err, student] = await to(studentService.createStudent(req.body, filePath, fileExt));
-		if (err) return next(new errors.UnprocessableEntityError(err.message));
+		if (err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 
 	// Make sure to delete the temp uploaded file
 	if (fileKey) {
@@ -39,8 +39,8 @@ const getAll = async function(req, res, next){
 		Student.findAll(
 			{ order: [ ['lastName', 'ASC'], ['firstName', 'ASC'] ] }
 		));
-	    if(err) return next(new errors.UnprocessableEntityError(err.message));
-	    if(!students) return next(new errors.NotFoundError());
+	    if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
+	    if(!students) return next(RE(new errors.NotFoundError()));
   
 	ReS(req, res, {message:'Get all students', students: students});
   next();
@@ -51,8 +51,8 @@ const getStudent = async function(req, res, next) {
 	var err, student;
 
 	[err, student] = await to(Student.findByPk(req.params.id));
-	  if(err) return next(new errors.UnprocessableEntityError(err.message));
-	  if(!student) return next(new errors.NotFoundError());
+	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
+	  if(!student) return next(RE(new errors.NotFoundError()));
 
 	return student;
 }
@@ -74,7 +74,7 @@ const update = async function (req, res, next) {
 	student.set(req.body);
   
 	[err, student] = await to(student.save());
-	  if(err) return next(new errors.UnprocessableEntityError(err.message));
+	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 
 	ReS(req, res, {message:'Updated student', student: student});
 	next();

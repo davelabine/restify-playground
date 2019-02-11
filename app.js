@@ -76,7 +76,7 @@ models.sequelize.authenticate().then(() => {
 });
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
-	logger.trace(`${metrics.method} ${metrics.path} ${metrics.statusCode} ${metrics.latency} ms`);
+	logger.info(`${metrics.method} ${metrics.path} ${metrics.statusCode} ${metrics.latency} ms`);
 }));
 
 server.listen(process.env.APP_PORT, process.env.APP_HOST, function () {

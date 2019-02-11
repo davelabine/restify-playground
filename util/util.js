@@ -27,10 +27,10 @@ module.exports.ReS = function(req, res, data, code){ // Success Web Response
     return res.json(send_data);
 };
 
-module.exports.TE = TE = function(err_message, log){ // TE stands for Throw Error
-    if(log === true){
-        logger.error(err_message);
+module.exports.RE = RE = function(err){ // RE stands for Return Error
+    if (err.message) {
+        logger.error(err.message);
     }
 
-    throw new Error(err_message);
+    return err;
 };
