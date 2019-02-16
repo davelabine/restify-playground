@@ -21,19 +21,17 @@ describe('studentsController', () => {
     describe('createStudent', () => {
         test('creates a student with no photo', async () => {
             const reqStudent = {
-                'id': 'FAKE_KEY',
                 'studentId': 'FAKE_ID',
                 'firstName': 'FAKE_FIRST_NAME',
                 'lastName': 'FAKE_LAST_NAME',
-                'photoUrl': undefined
             }; 
             let resStudent;
-            resStudent = Object.assign({}, reqStudent);
+            resStudent = Object.assign({'id': 'FAKE_KEY', 'photoUrl': ''}, reqStudent);
             resStudent.photoUrl = '';
 
             (StudentService).mockImplementation(() => {
                 return {
-                    createStudent: jest.fn(async (student, path, ext) => {
+                    createStudent: jest.fn(async () => {
                         return resStudent
                     })
                 }
@@ -47,7 +45,6 @@ describe('studentsController', () => {
             expect(res.json).toHaveBeenCalledWith({
                 message: expect.any(String),
                 request_body: expect.objectContaining(reqStudent),
-                request_query: undefined,
                 student: expect.objectContaining(resStudent)
             });
         });
