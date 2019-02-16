@@ -2,10 +2,9 @@ const logger = require('../util/basic-logger');
 const { to }  = require('../util/util');  
 const Student = require('../models').Student;
 const BlobClient = require('../util/blobclient');
-const blobClient = BlobClient();
-
 
 module.exports = () => {
+  const blobClient = BlobClient();
 
   const createStudent = async (student, photoPath, photoExt) => {
     let err, createdStudent;

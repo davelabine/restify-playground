@@ -3,7 +3,6 @@ const path = require('path');
 const logger = require('../util/basic-logger');
 const Student = require('../models').Student;
 const StudentService = require('../services/studentservice');
-const studentService = StudentService();
 const errors = require('restify-errors');     
 const { to, RE, ReS }  = require('../util/util');  
 
@@ -15,6 +14,7 @@ const create = async function (req, res, next) {
 		fileExt = path.extname(req.files[fileKey].name);
 	}
 
+	let studentService = StudentService();
 	let err, student;
 	[err, student] = await to(studentService.createStudent(req.body, filePath, fileExt));
 		if (err) return next(RE(new errors.UnprocessableEntityError(err.message)));
@@ -26,7 +26,7 @@ const create = async function (req, res, next) {
 		});
 	}
 	
-	res.header("id", student.id);	
+	//res.header("id", student.id);	
 	ReS(req, res, {message:'Created new student', student: student}, 201);
 	return next();
 };
