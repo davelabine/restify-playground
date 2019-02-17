@@ -1,6 +1,6 @@
 const logger = require('../util/basic-logger');
 const { to }  = require('../util/util');  
-const Student = require('../models').Student;
+const db = require('../models').Student;
 const BlobClient = require('../util/blobclient');
 
 module.exports = () => {
@@ -16,7 +16,8 @@ module.exports = () => {
     }
 
     student.photoUrl = photoUrl;
-    [err, createdStudent] = await to(Student.create(student));
+
+    [err, createdStudent] = await to(db.create(student));
       if (err) { logger.err('studentService create error', err.message); throw err; }
 
     logger.info("created student: ", createdStudent.get({plain: true}));
