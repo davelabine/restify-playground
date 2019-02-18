@@ -14,7 +14,6 @@ module.exports.to = async (promise) => {
 
 module.exports.ReS = function(req, res, data, code){ // Success Web Response
     let send_data = {
-        request_params: req.params,
 		request_query: req.query,
 		request_body: req.body
 	};

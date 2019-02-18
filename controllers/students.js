@@ -7,26 +7,36 @@ const studentService = StudentService();
 const errors = require('restify-errors');     
 const { to, RE, ReS }  = require('../util/util');  
 
-const create = async function (req, res, next) {
-	let filePath = '', fileExt ='';
-	const fileKey = Object.keys(req.files)[0];
+function getFileInfo(req) {
+	let fileKey, filePath = '', fileExt ='';
+	fileKey = Object.keys(req.files)[0];
 	if (fileKey) {
 		filePath = req.files[fileKey].path;
 		fileExt = path.extname(req.files[fileKey].name);
 	}
+	return [fileKey, filePath, fileExt];
+}
+
+function deleteFile(req, fileKey) {
+	if (fileKey) {
+	  fs.unlink(req.files[fileKey].path, (err) => {
+			if (err) { logger.error("failed to delete local image: " + err); }
+		});
+	}
+}
+
+const create = async function (req, res, next) {
+	let fileKey, filePath, fileExt;
+	[fileKey, filePath, fileExt] = getFileInfo(req);
 
 	let err, student;
 	[err, student] = await to(studentService.create(req.body, filePath, fileExt));
 		if (err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 
 	// Make sure to delete the temp uploaded file
-	if (fileKey) {
-	  fs.unlink(req.files[fileKey].path, (err) => {
-			if (err) { logger.error("failed to delete local image: " + err); }
-		});
-	}
+	deleteFile(req, fileKey);
 	
-	//res.header("id", student.id);	
+	res.header("id", student.id);	
 	ReS(req, res, {message:'Created new student', student: student}, 201);
 	return next();
 };
