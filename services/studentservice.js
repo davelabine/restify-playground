@@ -6,7 +6,7 @@ const BlobClient = require('../util/blobclient');
 module.exports = () => {
   const blobClient = BlobClient();
 
-  const createStudent = async (student, photoPath, photoExt) => {
+  const create = async (student, photoPath, photoExt) => {
     let err, createdStudent;
 
     let photoUrl = '';
@@ -24,7 +24,46 @@ module.exports = () => {
     return createdStudent;
   };
 
+  const get = async (id) => {
+    var err, student;
+  
+    [err, student] = await to(db.findByPk(id));
+      if (err) { logger.err('studentService get error: ', err.message); throw err; }
+  
+    return student;
+  };
+
+  const getAll = async () => {
+  	let err, students;
+
+    [err, students] = await to(
+      db.findAll(
+        { order: [ ['lastName', 'ASC'], ['firstName', 'ASC'] ] }
+      ));
+        if (err) { logger.err('studentService getAll error: ', err.message); throw err; }
+
+    return students;
+  };
+
+  const update = async (student, newData) => {
+    student.set(newData);
+    
+    let err, updatedStudent;
+    [err, updatedStudent] = await to(student.save());
+      if (err) { logger.err('studentService update error: ', err.message); throw err; }
+
+    return updatedStudent;
+  };
+
+  const remove = async (student) => {
+    student.destroy();
+  };
+
   return {
-    createStudent
+    create,
+    get,
+    getAll,
+    update,
+    remove
   };
 };
