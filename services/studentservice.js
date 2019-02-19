@@ -6,16 +6,26 @@ const BlobClient = require('../util/blobclient');
 module.exports = () => {
   const blobClient = BlobClient();
 
+  async function uploadPhoto(photoPath, photoExt) {
+    let photoUrl = '', err;
+    if ( photoPath && photoExt ) {
+      [err, photoUrl] = await to(blobClient.putFile(photoPath, photoExt));
+        if (err) { logger.err('studentService photo blob upload error: ', err.message); throw err; }
+    }
+
+    return photoUrl;
+  }
+
+  function deletePhoto(photoUrl) {
+    if (photoUrl) {
+      blobClient.deleteFile(photoUrl);
+    }
+  }
+
   const create = async (student, photoPath, photoExt) => {
     let err, createdStudent;
 
-    let photoUrl = '';
-    if ( photoPath && photoExt ) {
-        [err, photoUrl] = await to(blobClient.putFile(photoPath, photoExt));
-          if (err) { logger.err('studentService photo blob upload error: ', err.message); throw err; }
-    }
-
-    student.photoUrl = photoUrl;
+    student.photoUrl = await uploadPhoto(photoPath, photoExt);
 
     [err, createdStudent] = await to(db.create(student));
       if (err) { logger.err('studentService create error', err.message); throw err; }
@@ -45,7 +55,10 @@ module.exports = () => {
     return students;
   };
 
-  const update = async (student, newData) => {
+  const update = async (student, newData, photoPath, photoExt) => {
+    deletePhoto(student.photoUrl);
+    newData.photoUrl = await uploadPhoto(photoPath, photoExt);
+
     student.set(newData);
     
     let err, updatedStudent;
@@ -56,9 +69,7 @@ module.exports = () => {
   };
 
   const remove = async (student) => {
-    if (student.photoUrl) {
-      blobClient.deleteFile(student.photoUrl);
-    }
+
 
     student.destroy();
   };

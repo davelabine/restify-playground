@@ -66,10 +66,16 @@ module.exports.get = get;
 
 const update = async function (req, res, next) {
 	let student = await studentService.get(req.params.id);
-	  if(!student) return next(RE(new errors.NotFoundError()));
+		if(!student) return next(RE(new errors.NotFoundError()));
 		
-	[err, student] = await to(studentService.update(student, req.body));
+	let fileKey, filePath, fileExt;
+	[fileKey, filePath, fileExt] = getFileInfo(req);
+		
+	[err, student] = await to(studentService.update(student, req.body, filePath, fileExt));
 	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
+
+	// Make sure to delete the temp uploaded file
+	deleteFile(req, fileKey);
 
 	ReS(req, res, {message:'Updated student', student: student});
 	next();
