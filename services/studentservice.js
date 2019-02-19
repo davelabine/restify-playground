@@ -56,6 +56,10 @@ module.exports = () => {
   };
 
   const remove = async (student) => {
+    if (student.photoUrl) {
+      blobClient.deleteFile(student.photoUrl);
+    }
+
     student.destroy();
   };
 

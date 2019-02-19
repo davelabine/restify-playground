@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
+const path = require('path');
 const uuid = require('node-uuid');
 const { to }  = require('./util');  
 const logger = require('./basic-logger');
@@ -36,7 +37,21 @@ module.exports = () => {
         return resp.Location;
     };
 
+    const deleteFile = async(fileUrl) => {
+        let keyName = path.basename(fileUrl);
+        logger.info("keyname: ", keyName);
+        let err, resp;
+        [err, resp] = await to(s3.deleteObject({
+            Bucket: bucketName,
+            Key: keyName,
+        }).promise());
+          if(err) return logger.error("S3 delete error ", err, err.stack);
+          
+        logger.info('s3 delete successful.');
+    }
+
     return {
         putFile,
+        deleteFile
     };
 };
