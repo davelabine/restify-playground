@@ -69,8 +69,7 @@ module.exports = () => {
   };
 
   const remove = async (student) => {
-
-
+    deletePhoto(student.photoUrl);
     student.destroy();
   };
 
