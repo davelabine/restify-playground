@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const logger = require('../util/basic-logger');
 const StudentService = require('../services/studentservice');
-const studentService = StudentService();
+
 const errors = require('restify-errors');     
 const { to, RE, ReS }  = require('../util/util');  
 
@@ -29,13 +29,14 @@ const create = async function (req, res, next) {
 	[fileKey, filePath, fileExt] = getFileInfo(req);
 
 	let err, student;
+	const studentService = StudentService();
 	[err, student] = await to(studentService.create(req.body, filePath, fileExt));
 		if (err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 
 	// Make sure to delete the temp uploaded file
 	deleteFile(req, fileKey);
 	
-	res.header("id", student.id);	
+	// res.header("id", student.id);	
 	ReS(req, res, {message:'Created new student', student: student}, 201);
 	return next();
 };

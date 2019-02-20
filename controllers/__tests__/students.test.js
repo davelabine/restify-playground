@@ -5,6 +5,7 @@ jest.mock('../../util/basic-logger');
 const StudentService = require('../../services/studentservice');
 jest.mock('../../services/studentservice');
 
+
 //const Student = require('../../models').Student;
 const studentsController = require('../students');
 
@@ -15,6 +16,7 @@ describe('studentsController', () => {
 
     beforeEach(() => {
         req = jest.fn();
+        req.files = [];
         res = { json: jest.fn() };
         next = jest.fn();
     });
@@ -29,15 +31,15 @@ describe('studentsController', () => {
             resStudent = Object.assign({'id': 'FAKE_KEY', 'photoUrl': ''}, reqStudent);
             resStudent.photoUrl = '';
 
+            //const studentService = StudentService();
             (StudentService).mockImplementation(() => {
                 return {
-                    createStudent: jest.fn(async () => {
+                    create: jest.fn(async () => {
                         return resStudent
                     })
                 }
             });
 
-            req.files = [];
             req.body = reqStudent;
             await studentsController.create(req, res, next);
 
