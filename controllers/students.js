@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../util/basic-logger');
-const StudentService = require('../services/studentservice');
+let studentService = require('../services/studentservice');
 
 const errors = require('restify-errors');     
 const { to, RE, ReS }  = require('../util/util');  
@@ -24,12 +24,16 @@ function deleteFile(req, fileKey) {
 	}
 }
 
+const setStudentService = async function (newStudentService) {
+	studentService = newStudentService;
+}
+module.exports.setStudentService = setStudentService;
+
 const create = async function (req, res, next) {
 	let fileKey, filePath, fileExt;
 	[fileKey, filePath, fileExt] = getFileInfo(req);
 
 	let err, student;
-	const studentService = StudentService();
 	[err, student] = await to(studentService.create(req.body, filePath, fileExt));
 		if (err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 
@@ -42,22 +46,23 @@ const create = async function (req, res, next) {
 };
 module.exports.create = create;
 
-const getAll = async function(req, res, next){
+const getAll = async function(req, res, next) {
 	let err, students;
 
 	[err, students] = await to(studentService.getAll());
 	    if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
-  
+
 	ReS(req, res, {message:'Get all students', students: students});
   next();
 }
 module.exports.getAll = getAll;
 
 const get = async function(req, res, next) {
-	var err, student;
+	let err, student;
 
 	[err, student] = await to(studentService.get(req.params.id));
-	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
+		if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
+		logger.info('student fun - ', student);
 		if(!student) return next(RE(new errors.NotFoundError()));
 		
 	ReS(req, res, {message:'Get student', student: student});  	
@@ -66,7 +71,9 @@ const get = async function(req, res, next) {
 module.exports.get = get;
 
 const update = async function (req, res, next) {
-	let student = await studentService.get(req.params.id);
+	let err, student 
+	[err, student] = await to(studentService.get(req.params.id));
+	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 		if(!student) return next(RE(new errors.NotFoundError()));
 		
 	let fileKey, filePath, fileExt;
