@@ -106,7 +106,7 @@ describe('studentsController', () => {
     describe('update', () => {
         test('updates the student', async () => {
             // Doesn't really matter that the student isn't actually updated... 
-            // We're not testing that, just the responses
+            // We're not testing that, just the controller responses
             studentServiceMock.get = responseStudentFn;
             studentServiceMock.update = responseStudentFn;
             req.params = { id : 'FAKE_ID' };
@@ -128,6 +128,31 @@ describe('studentsController', () => {
             req.params = { id : 'FAKE_ID' };
             studentServiceMock.get = errorFn;
             await studentsController.update(req, res, next);
+            expect(next).toHaveBeenCalledWith(new errors.UnprocessableEntityError(''));
+        });
+    });
+    describe('remove', () => {
+        test('removes the student', async () => {
+            studentServiceMock.get = responseStudentFn;
+            req.params = { id : 'FAKE_ID' };
+            await studentsController.remove(req, res, next);
+            expect(res.statusCode).toBe(204);
+            expect(res.json).toHaveBeenCalledWith({
+                message: expect.any(String),
+            });
+        });
+        test('handles no student found', async () => {
+            req.params = { id : 'FAKE_ID' };
+            studentServiceMock.get = jest.fn(async () => {
+                return undefined;
+            });
+            await studentsController.remove(req, res, next);
+            expect(next).toHaveBeenCalledWith(new errors.NotFoundError(''));
+        });
+        test('handles an error on get student', async () => {
+            req.params = { id : 'FAKE_ID' };
+            studentServiceMock.get = errorFn;
+            await studentsController.remove(req, res, next);
             expect(next).toHaveBeenCalledWith(new errors.UnprocessableEntityError(''));
         });
     });

@@ -62,7 +62,6 @@ const get = async function(req, res, next) {
 
 	[err, student] = await to(studentService.get(req.params.id));
 		if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
-		logger.info('student fun - ', student);
 		if(!student) return next(RE(new errors.NotFoundError()));
 		
 	ReS(req, res, {message:'Get student', student: student});  	
@@ -91,7 +90,9 @@ const update = async function (req, res, next) {
 module.exports.update = update;
 
 const remove = async function (req, res, next) {
-	let student = await studentService.get(req.params.id);
+	let err, student 
+	[err, student] = await to(studentService.get(req.params.id));
+	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 		if(!student) return next(RE(new errors.NotFoundError()));
 
 	studentService.remove(student);
