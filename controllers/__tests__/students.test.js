@@ -3,42 +3,33 @@ require('dotenv').config(); // Instantiate environment variables.
 jest.mock('../../util/basic-logger');
 const errors = require('restify-errors');   
 
+const studentServiceMock = require('../../services/studentservice');
+jest.mock('../../services/studentservice')
+
 const studentsController = require('../students');
 
 describe('studentsController', () => {
     let req, res, next;
-    let requestStudent, responseStudent;
-    let responseStudentFn, errorFn;
-    let studentServiceMock;
+
+    const requestStudent = {
+        'studentId': 'FAKE_ID',
+        'firstName': 'FAKE_FIRST_NAME',
+        'lastName': 'FAKE_LAST_NAME',
+    }; 
+    const responseStudent = Object.assign({'id': 'FAKE_KEY', 'photoUrl': ''}, requestStudent);
+
+    const responseStudentFn = jest.fn(async () => {
+        return responseStudent;
+    });
+    const errorFn = jest.fn(async () => {
+        throw new Error();
+    });
 
     beforeEach(() => {
         req = jest.fn();
         req.files = [];
         res = { json: jest.fn() };
         next = jest.fn();
-
-        requestStudent = {
-            'studentId': 'FAKE_ID',
-            'firstName': 'FAKE_FIRST_NAME',
-            'lastName': 'FAKE_LAST_NAME',
-        }; 
-        responseStudent = Object.assign({'id': 'FAKE_KEY', 'photoUrl': ''}, requestStudent);
-
-        responseStudentFn = jest.fn(async () => {
-            return responseStudent;
-        });
-        errorFn = jest.fn(async () => {
-            throw new Error();
-        });
-
-        studentServiceMock = {
-            create: jest.fn(),
-            getAll: jest.fn(),
-            get: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
-        };
-        studentsController.setStudentService(studentServiceMock);
     });
     describe('create', () => {
         test('creates a student with no photo', async () => {

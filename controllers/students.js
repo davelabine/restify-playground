@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../util/basic-logger');
-let studentService = require('../services/studentservice');
+const studentService = require('../services/studentservice');
 
 const errors = require('restify-errors');     
 const { to, RE, ReS }  = require('../util/util');  
@@ -23,11 +23,6 @@ function deleteFile(req, fileKey) {
 		});
 	}
 }
-
-const setStudentService = async function (newStudentService) {
-	studentService = newStudentService;
-}
-module.exports.setStudentService = setStudentService;
 
 const create = async function (req, res, next) {
 	let fileKey, filePath, fileExt;
@@ -92,6 +87,8 @@ module.exports.update = update;
 const remove = async function (req, res, next) {
 	let err, student 
 	[err, student] = await to(studentService.get(req.params.id));
+	logger.error('fun ', err);
+	logger.error('student ', student);
 	  if(err) return next(RE(new errors.UnprocessableEntityError(err.message)));
 		if(!student) return next(RE(new errors.NotFoundError()));
 
