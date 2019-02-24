@@ -1,7 +1,7 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
 const path = require('path');
-const uuid = require('node-uuid');
+const uuidv1 = require('uuid/v1');
 const { to }  = require('./util');  
 const logger = require('./basic-logger');
 
@@ -17,7 +17,7 @@ module.exports = () => {
         if (!filePath) {
             throw new Error("blobclient putFile - empty file path.");
         }
-        const keyName = uuid.v4() + ext;
+        const keyName = uuidv1() + ext;
 
         var fileStream = fs.createReadStream(filePath);
         fileStream.on('error', function(err) {
