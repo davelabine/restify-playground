@@ -67,13 +67,18 @@ server.on('after', restify.plugins.auditLogger({
 */
 
 // DATABASE
+// Note: disabled env flag to simplify new deployments.
 const models = require("./models");
-models.sequelize.authenticate().then(() => {
-	logger.info('Connected to SQL database.');
-})
-.catch(err => {
-    logger.error('Unable to connect to SQL database.', err);
-});
+if (!process.env.APP_DB_DISABLED) {
+	models.sequelize.authenticate().then(() => {
+		logger.info('Connected to SQL database.');
+	})
+	.catch(err => {
+		logger.error('Unable to connect to SQL database.', err);
+	});
+}
+
+
 
 server.on('after', restify.plugins.metrics({ server: server }, function onMetrics(err, metrics) {
 	logger.info(`${metrics.method} ${metrics.path} ${metrics.statusCode} ${metrics.latency} ms`);
