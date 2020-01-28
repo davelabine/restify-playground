@@ -3,7 +3,7 @@ require('dotenv').config(); // Instantiate environment variables.
 // LOGGER
 const logger = require('./util/basic-logger');
 // A little too verbose...
-// logger.info(process.env);  
+logger.info(process.env);  
 
 // RESTIFY
 const restify = require('restify');
